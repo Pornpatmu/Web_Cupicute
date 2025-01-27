@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/Login_Style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="header.js"></script>
+</head>
+<!-- =================== HEADER  =================== -->
+
+<body>
+    <header>
+        <div id="nameproject">PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</div>
+        <div id="navbar">
+          <div class="left-group">
+              <nav>
+                  <ul class="grouppage" id="grouppage1">
+                      <li class="page"><a href="/">Home</a></li>
+                      <li class="product" onclick="showproduct()">Product <i class="fa-solid fa-caret-down"></i>
+                          <ul class="dropdownproduct">
+                            <li><a href="/Search?category=Lips">LIPS</a></li>
+                            <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                            <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                            <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                            <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                          </ul>
+                      </li>
+                      <li class="page"><a href="/Team">About Us</a></li>
+                  </ul>
+              </nav>
+          </div>
+      
+          <div class="center-logo">
+              <img class="logo" src="images/Normal_page/logo_whiteHD.png" alt="Logo">
+          </div>
+      
+          <div class="right-group">
+              <nav>
+                  <ul class="grouppage" id="grouppage2">
+                      <li class="search"><a href="/Search">Search</a></li>
+                      <li class="activesearch"><a href="/login">Login</a></li>
+                      <li class="user">
+                
+                          <img id="usericon" src="images/Normal_page/usericon.jpg" alt="User Icon" class="user-image">
+                          <span class="user-link">username</span>
+                    </li>
+                    
+                      <li><div class="bars" onclick="showMenu(this)">
+                        <div class="bar1"></div>
+                        <div class="bar2"></div>
+                        <div class="bar3"></div>
+                    </div>
+                        <ul class="dropdownmenu">
+                          <li class="pagedropdown"><a href="/">Home</a></li>
+                          <li class="pageproduct" onclick="showProduct(this)">Product <i class="fa-solid fa-caret-down"></i></li>
+                          <li>
+                              <ul class="dropdownproduct2">
+                                <li><a href="/Search?category=Lips">LIPS</a></li>
+                                <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                                <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                                <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                                <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                              </ul>
+                          </li>
+                          <li class="pagedropdown"><a href="/Team">About Us</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+              </nav>
+          </div>
+      </div>
+      </header>
+<!-- =================== MAIN CONTENT =================== -->
+<main>
+        <div class="box1">
+            <div class="login-container">
+                <div class="login-box">
+                    <h1>Login</h1>
+                    <img class="heartpng" src="/images/Normal_page/heart.png" alt="heart Image">
+                    <form id="login-form">
+                        <div class="input-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="password" name="password" placeholder="Enter your password"required>
+                                <img id="eye-icon" src="/images/Normal_page/show.png" alt="Show Password">
+                            </div>
+                        </div>
+                        <div class="errorMSform" id="error-message" style="display:none;">
+                            ! Invalid username or password.
+                        </div>
+                        
+                        <button type="button" id="login-button">Login</button>
+                    </form>
+
+                </div>
+            </div>
+            <img class="pnglogo_login" src="/images/Normal_page/cupicute logo login.png" alt="CUPICUTE logo">
+        </div>
+
+    </main>
+
+<!-- =================== FOOTER  =================== -->
+
+    <footer>
+        <div class="footer-content">
+            <p>COPY RIGHT BY <span>CUPICUTE
+                    <img src="/images/Normal_page/logo_whiteFT.png" class="footer-logo" alt="CUPICUTE Logo">
+                </span> PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</p>
+        </div>
+    </footer>
+    <script type="module">
+        
+        import { callLoginWS } from "/callLoginWS.js";
+
+
+
+ function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.src = '/images/Normal_page/hide.png';  
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.src = '/images/Normal_page/show.png';  
+    }
+}
+
+async function handleLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const loginButton = document.getElementById('login-button');
+    const errorMessage = document.getElementById('error-message');
+
+    // ตรวจสอบว่าผู้ใช้กรอก username และ password หรือไม่
+    if (!username || !password) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = "Enter username and password.";
+        return;
+    }
+
+    loginButton.disabled = true;  
+    errorMessage.style.display = 'none';  
+
+    let user_data = { username, password };
+
+    try {
+        const data = await callLoginWS("signin",  user_data ); 
+        console.log(data);
+        const token = data.token;
+
+        if (data.token) {            
+            errorMessage.style.display = 'none'; 
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userID', data.userID);
+            console.log(localStorage.getItem('authToken')); 
+ 
+            window.location.href = '/Admin'; 
+        } else {
+            errorMessage.style.display = 'block';
+            errorMessage.textContent = "Invalid username or password."; // แสดงข้อความผิดพลาดเมื่อไม่มี token
+            console.log(data);
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = "An error occurred during login. Please try again later.";
+    } finally {
+        loginButton.disabled = false;
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const eyeIcon = document.getElementById('eye-icon');
+    const loginButton = document.getElementById('login-button');
+
+    if (eyeIcon) {
+        eyeIcon.addEventListener('click', togglePassword);  
+    }
+    if (loginButton) {
+        loginButton.addEventListener('click', handleLogin);  
+    }
+});
+// ------------- profile  -------------
+document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+
+    </script>
+</body>
+
+</html>

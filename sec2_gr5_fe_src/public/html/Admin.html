@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/Admin.css">
+    <link rel="stylesheet" href="/css/components2.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/images/Normal_page/Logo.png" alt="CupiCute Logo">
+        </div>
+        <ul class="menu">
+            <li>
+                <a href="/">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/house-solid.svg" alt="Home Icon">
+                    </div>
+                    <i class="fa fa-home"></i> Home
+                </a>
+            </li>
+            <li>
+                <a href="/Product_view">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/bag-shopping-solid.svg" alt="Product Icon">
+                    </div>
+                    <i class="fa fa-pr"></i> Product Management
+                </a>
+            </li>
+            <li>
+                <a href="/Admin">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/user-large-solid.svg" alt="User Icon">
+                    </div>
+                    <i class="fa fa-users"></i> User Management
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/images/Normal_page/user-solid.svg" alt="User Image">
+                <h1>USER ACCOUNT MANAGEMENT</h1>
+            </div>
+            <div class="header-right">
+                <img id="usericon" src="/images/Normal_page/circle-user-regular.svg" alt="User Image">
+                <span>USERNAME</span>
+                <img src="/images/Normal_page/right-to-bracket-solid.svg" alt="Logout_Icon">
+                <a href="#" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <div class="header-container">
+            <div class="search-container">
+                <img src="/images/Normal_page/magnifying-glass-solid.svg" alt="Search Icon" class="search-icon">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search by UserID or User Name or Email">
+            </div>
+            <a href="/AdminAdd" class="add-new-btn">
+                <img src="/images/Normal_page/plus-solid.svg" alt="Add Icon" class="add-icon">
+                ADD NEW
+            </a>
+
+        </div>
+
+        <div class="user-table">
+            <div class="user-table-header">
+
+                <div>Image</div>
+                <div>User ID</div>
+                <div>Username</div>
+                <div>Password</div>
+                <div>Phone Number</div>
+                <div>Email</div>
+                <div>Last Active</div>
+                <div></div>
+            </div>
+            <div class="user-table-result"></div>
+        </div>
+    </div>
+        <!-- ...............   script   ........................... -->
+
+    <script type="module">
+                import { callUserAdminWS } from "/callUserAdminWS.js";
+                import { callLoginWS } from "/callLoginWS.js";
+
+
+       document.addEventListener('DOMContentLoaded', async () => {
+    const userTableContainer = document.querySelector('.user-table-result');
+    
+    // ฟังก์ชัน loadUsers ปรับใช้ callUserAdminWS
+    async function loadUsers(searchQuery = '') {
+        try {
+            // ใช้ callUserAdminWS 
+            const users = await callUserAdminWS('GET', 'UserAdmins');
+            userTableContainer.innerHTML = ''; // Clear previous results
+
+            const filteredUsers = searchQuery
+                ? users.data.filter(user =>
+                    user.UserID.includes(searchQuery) ||
+                    user.Username.includes(searchQuery) ||
+                    (user.Email && user.Email.includes(searchQuery))
+                )
+                : users.data;
+
+            if (filteredUsers.length > 0) {
+                filteredUsers.forEach(user => {
+                    const userRow = document.createElement('div');
+                    userRow.className = 'user-table-row';
+
+                    userRow.innerHTML = `
+                        <img class="profile-pic" src="${getProfileImage(user.User_Image)}" alt="${user.UserID}" onerror="this.onerror=null;this.src='/images/User/101.jpg';">
+                        <div>${user.UserID}</div>
+                        <div>${user.Username}</div>
+                        <div>${user.U_Password}</div>
+                        <div>${user.PhoneNumber || 'N/A'}</div>
+                        <div>${user.Email || 'N/A'}</div>
+                        <div>${user.LastActive || 'N/A'}</div>
+                        <div>
+                            <a href="/AdminEdit?userId=${user.UserID}" class="edit-btn">
+                                <img src="/images/Normal_page/pen-solid.svg" alt="Edit" class="icon">
+                            </a>
+                            <a href="#" class="delete-btn" data-id="${user.UserID}">
+                                <img src="/images/Normal_page/trash-can-solid.svg" alt="Delete" class="icon">
+                            </a>
+                        </div>
+                    `;
+
+                    userTableContainer.appendChild(userRow);
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', async event => {
+                        event.preventDefault();
+                        const userId = button.getAttribute('data-id');
+                        await deleteUser(userId);
+                    });
+                });
+            } else {
+                const emptyRow = document.createElement('div');
+                emptyRow.className = 'user-table-row';
+                emptyRow.innerHTML = `<div colspan="7" style="text-align: center;">No users found.</div>`;
+                userTableContainer.appendChild(emptyRow);
+            }
+        } catch (error) {
+            console.error('Error loading users:', error);
+            const errorRow = document.createElement('div');
+            errorRow.className = 'user-table-row';
+            errorRow.innerHTML = `<div colspan="7" style="text-align: center;">Failed to load users. Please try again later.</div>`;
+            userTableContainer.appendChild(errorRow);
+        }
+    }
+
+    // ฟังก์ชัน deleteUser
+    async function deleteUser(userId) {
+        try {
+            const confirmation = confirm(`Are you sure you want to delete user ID: ${userId}?`);
+            if (!confirmation) return;
+
+            const result = await callUserAdminWS('DELETE', `userAdmin/${userId}`);
+            if (result.error || result.data === 0) {
+                throw new Error('User deletion failed.');
+            }
+
+            alert('User deleted successfully.');
+            const rowToDelete = document.querySelector(`.delete-btn[data-id="${userId}"]`).closest('.user-table-row');
+            if (rowToDelete) rowToDelete.remove();
+        } catch (error) {
+            alert('Failed to delete user. Please try again.');
+            console.error('Error deleting user:', error);
+        }
+    }
+
+    // ฟังก์ชัน getProfileImage
+    function getProfileImage(imageUrl) {
+        return imageUrl && imageUrl.trim() ? imageUrl : '/images/User/101.jpg';
+    }
+
+    // เรียกใช้ loadUsers เมื่อ DOMContentLoaded
+    await loadUsers();
+
+    // ฟังก์ชันค้นหาผู้ใช้
+    document.getElementById('searchInput').addEventListener('input', function () {
+        let searchQuery = this.value;
+        loadUsers(searchQuery); // ส่งคำค้นหาไปที่ API
+    });
+});
+ // ------------- profile  -------------
+ document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        // ------------- logout  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('.logout-btn');
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        // ลบ Token ออกจาก Local Storage
+                        localStorage.removeItem('authToken');
+
+                        // เปลี่ยนเส้นทางกลับไปยังหน้า Login
+                        window.location.href = '/login';
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

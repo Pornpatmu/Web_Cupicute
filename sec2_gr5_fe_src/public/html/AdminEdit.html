@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/AdminAdd.css">
+    <link rel="stylesheet" href="/css/components2.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/images/Normal_page/Logo.png" alt="CupiCute Logo">
+        </div>
+        <ul class="menu">
+            <li>
+                <a href="/">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/house-solid.svg" alt="Home Icon">
+                    </div>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="/Product_view">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/bag-shopping-solid.svg" alt="Product Icon">
+                    </div>
+                    Product Management
+                </a>
+            </li>
+            <li>
+                <a href="/Admin">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/user-large-solid.svg" alt="User Icon">
+                    </div>
+                    User Management
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/images/Normal_page/user-solid.svg" alt="User Image">
+                <h1>Edit Admin</h1>
+            </div>
+            <div class="header-right">
+                <img id="usericon" src="/images/Normal_page/circle-user-regular.svg" alt="User Image">
+                <span>USERNAME</span>
+                <img src="/images/Normal_page/right-to-bracket-solid.svg" alt="Logout_Icon">
+                <a href="#" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Information Section -->
+            <section class="info-section">
+                <h3>INFORMATION</h3>
+                <div class="info-grid">
+                    <div class="group1">
+                        <div class="profile-image">
+                            <!-- <img src="/images/Normal_page/101.jpg" alt="Profile Picture Placeholder"> -->
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="phoneNumber" placeholder="xxx-xxx-xxxx">
+                        </div>
+                        <div class="form-group" id="group2_4">
+                            <label>Email</label>
+                            <input type="email" id="email" placeholder="Hello@gmail.com">
+                        </div>
+                    </div>
+                    <div class="group2">
+                        <div class="form-group" id="group2_0">
+                            <label>User ID</label>
+                            <input type="text" id="userId" placeholder="xxx">
+                        </div>
+                        <div class="form-group" id="group2_1">
+                            <label>Admin ID</label>
+                            <input type="text" id="AdminId" placeholder="6xxxxxx">
+                        </div>
+                        <div class="form-group" id="group2_2">
+                            <label>First Name</label>
+                            <input type="text" id="FirstName" placeholder="Enter FirstName">
+                        </div>
+                        <div class="form-group" id="group2_3">
+                            <label>Last Name</label>
+                            <input type="text" id="LastName" placeholder="Enter LastName">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Login Credentials Section -->
+            <section class="login-section">
+                <h3>LOGIN CREDENTIALS</h3>
+                <div class="login-grid">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter password">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons Section -->
+            <div class="buttons">
+                <button class="cancel-btn" onclick="window.location.href='/Admin'">Cancel</button>
+                <button class="save-btn">Update</button>
+            </div>
+        </div>
+    </div>
+        <!-- ...............   script   ........................... -->
+
+    <script type="module">
+        import { callUserAdminWS } from '/callUserAdminWS.js'; 
+        import { callLoginWS } from "/callLoginWS.js";
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            console.log('userId from URL:', userId);
+
+            if (!userId) {
+                alert('User ID is missing from the URL. Please try again.');
+                return;
+            }
+
+            // โหลดข้อมูลผู้ใช้
+            loadUserData(userId);
+
+            // เชื่อมปุ่มกับฟังก์ชัน update
+            initializeSaveButtonListener();
+        });
+
+        // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้ปุ่ม
+        function initializeSaveButtonListener() {
+            const saveButton = document.querySelector('.save-btn');
+            if (saveButton) {
+                saveButton.addEventListener('click', update);
+            } else {
+                console.error('Save button not found in the DOM.');
+            }
+        }
+
+        // ฟังก์ชันสำหรับโหลดข้อมูลของผู้ใช้
+        async function loadUserData(userId) {
+            try {
+                console.log("Loading data for userId:", userId);
+
+                // ใช้ callUserAdminWS เรียก API
+                const result = await callUserAdminWS('GET', `userAdmin/${userId}`);
+
+                if (result.error) {
+                    throw new Error(result.message || 'Failed to fetch user data.');
+                }
+
+                const user = result.data;
+                if (!user) {
+                    throw new Error('User data is null or undefined.');
+                }
+
+                // กรอกข้อมูลลงในฟอร์ม
+                document.getElementById('userId').value = user.UserID || '';
+                document.getElementById('AdminId').value = user.AdminID || '';
+                document.getElementById('FirstName').value = user.FirstName || '';
+                document.getElementById('LastName').value = user.LastName || '';
+                document.getElementById('email').value = user.Email || '';
+                document.getElementById('phoneNumber').value = user.PhoneNumber || '';
+                document.getElementById('username').value = user.Username || '';
+            } catch (error) {
+                alert('Failed to load user data. Please try again later.');
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // ฟังก์ชันสำหรับบันทึกข้อมูลที่แก้ไข
+        async function update() {
+            const saveButton = document.querySelector('.save-btn');
+
+            if (!saveButton) {
+                console.error('Save button not found in the DOM.');
+                return;
+            }
+
+            saveButton.disabled = true;
+
+            try {
+                // Collect form data
+                const userId = document.getElementById('userId')?.value;
+                const adminId = document.getElementById('AdminId')?.value;
+                const firstname = document.getElementById('FirstName')?.value;
+                const lastname = document.getElementById('LastName')?.value;
+                const email = document.getElementById('email')?.value;
+                const phoneNumber = document.getElementById('phoneNumber')?.value;
+                const username = document.getElementById('username')?.value;
+                const password = document.getElementById('password')?.value;
+
+                // Validate all required fields
+                if (!userId || !adminId || !firstname || !lastname || !email || !phoneNumber || !username || !password) {
+                    alert('Please fill in all the required fields.');
+                    saveButton.disabled = false;
+                    return;
+                }
+
+                /// Create the user object
+                const user = {
+                    UserID: userId,
+                    Username: username,
+                    U_Password: password,
+                    AdminID: adminId
+                };
+
+                // Create the admin object
+                const admin = {
+                    AdminID: adminId,
+                    FirstName: firstname,
+                    LastName: lastname,
+                    Email: email,
+                    PhoneNumber: phoneNumber
+                };
+
+                // Create the payload containing both user and admin
+                const payload = {
+                    user: user,
+                    admin: admin
+                };
+
+                const result = await callUserAdminWS("PUT", `userAdmin/${userId}`, payload);
+
+                if (result.error) {
+                    alert(`Failed to update user: ${result.message || 'Unknown error'}`);
+                    console.error(result.message);
+                    return;
+                }
+
+                alert('User updated successfully.');
+                window.location.replace('/Admin');
+            } catch (error) {
+                alert('An error occurred while updating the user. Please try again later.');
+                console.error('Error during update:', error);
+            } finally {
+                saveButton.disabled = false;
+            }
+        }
+// ------------- profile  -------------
+document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        // ------------- logout  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('.logout-btn');
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        // ลบ Token ออกจาก Local Storage
+                        localStorage.removeItem('authToken');
+
+                        // เปลี่ยนเส้นทางกลับไปยังหน้า Login
+                        window.location.href = '/login';
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+            }
+        });
+    
+
+    </script>
+</body>
+
+</html>

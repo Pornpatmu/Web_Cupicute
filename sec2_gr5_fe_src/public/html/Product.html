@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/Product.css">
+    <link rel="stylesheet" href="/css/components2.css">
+    <!-- <script src="/client_js/function/Product.js"></script> -->
+
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/images/Normal_page/Logo.png" alt="CupiCute Logo">
+        </div>
+        <ul class="menu">
+            <li>
+                <a href="/">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/house-solid.svg" alt="Home Icon">
+                    </div>
+                    <i class="fa fa-home"></i> Home
+                </a>
+            </li>
+            <li>
+                <a href="/Product_view">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/bag-shopping-solid.svg" alt="Product Icon">
+                    </div>
+                    <i class="fa fa-pr"></i> Product Management
+                </a>
+            </li>
+            <li>
+                <a href="/Admin">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/user-large-solid.svg" alt="User Icon">
+                    </div>
+                    <i class="fa fa-users"></i> User Management
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/images/Normal_page/bag-shopping-solid-pink.svg" alt="Product Icon">
+                <h1>Product Management</h1>
+            </div>
+            <div class="header-right">
+                <img id="usericon" src="/images/Normal_page/circle-user-regular.svg" alt="User Image">
+                <span>USERNAME</span>
+                <img src="/images/Normal_page/right-to-bracket-solid.svg" alt="Logout_Icon">
+                <a href="#" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <div class="header-container">
+            <div class="search-container">
+                <img src="/images/Normal_page/magnifying-glass-solid.svg" alt="Search Icon" class="search-icon"
+                    id="search-btn">
+                <input type="text" class="search-input" id="search-input" placeholder="Search by Product Name or ID">
+            </div>
+            <a href="/ProductAdd" class="add-new-btn">
+                <img src="/images/Normal_page/plus-solid.svg" alt="Add Icon" class="add-icon">
+                ADD NEW
+            </a>
+        </div>
+
+
+        <div class="product-table">
+            <div class="product-table-header">
+                <div>Image</div>
+                <div id="pro_ID">Product ID</div>
+                <div id="pro_name">Product Name</div>
+                <div id="pro_price">Price</div>
+                <div id="pro_description">Description</div>
+                <div id="pro_category">Category ID</div>
+                <div>Actions</div>
+            </div>
+        </div>
+
+
+        <div class="product-table-row">
+            <div><img class="profile-pic" src="/images/Normal_page/circle-user-regular.svg" alt="User Image"></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div>
+                <a href="#" class="edit-btn">
+                    <img src="/images/Normal_page/pen-solid.svg" alt="Edit" class="icon">
+                </a>
+                <a href="#" class="delete-btn">
+                    <img src="/images/Normal_page/trash-can-solid.svg" alt="Delete" class="icon">
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ...............   script   ........................... -->
+
+    <script type="module">
+        import { callProductWS } from "/callProductWS.js";
+        import { callLoginWS } from "/callLoginWS.js";
+ 
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const productTableContainer = document.querySelector('.product-table');
+            const searchInput = document.querySelector('.search-input');
+            const searchButton = document.querySelector('.search-icon');
+
+            async function loadProducts(query = "") {
+                try {
+                    const endpoint = query
+                        ? `/productsearch?search=${encodeURIComponent(query)}`
+                        : '/productsearch';
+                    const products = await callProductWS(endpoint, 'getProducts+search');
+
+                    // ลบแถวที่มีอยู่ก่อนหน้านี้
+                    document.querySelectorAll('.product-table-row:not(.product-table-header)').forEach(row => row.remove());
+
+                    if (products.data.length > 0) {
+                        products.data.forEach((product) => {
+                            const productRow = document.createElement('div');
+                            productRow.className = 'product-table-row';
+
+                            productRow.innerHTML = `
+                    <div>
+                            <img class="profile-pic" src="${product.ImageURL || '/images/product/001.png'}" alt="${product.ProductName}">
+                    </div>
+                    <div>${product.ProductID}</div>
+                    <div>${product.ProductName}</div>
+                    <div>${product.Price}</div>
+                    <div>${product.P_Description || 'N/A'}</div>
+                    <div>${product.CategoryID || 'N/A'}</div>
+                    <div>Last updated: ${product.updated_at || 'N/A'}</div>
+                    <div>
+                        <a href="/ProductEdit?productId=${product.ProductID}" class="edit-btn">
+                            <img src="/images/Normal_page/pen-solid.svg" alt="Edit" class="icon">
+                        </a>
+                        <a href="#" class="delete-btn" data-id="${product.ProductID}">
+                            <img src="/images/Normal_page/trash-can-solid.svg" alt="Delete" class="icon">
+                        </a>
+                    </div>
+                `;
+                            productTableContainer.appendChild(productRow);
+                        });
+
+                        document.querySelectorAll('.delete-btn').forEach(button => {
+                            button.addEventListener('click', async (event) => {
+                                event.preventDefault();
+                                const productId = button.getAttribute('data-id');
+                                await deleteProduct(productId);
+                            });
+                        });
+                    } else {
+                        const emptyRow = document.createElement('div');
+                        emptyRow.className = 'product-table-row failed-row';
+                        emptyRow.innerHTML = `<div colspan="6" style="text-align: center;">No products found.</div>`;
+
+                        productTableContainer.appendChild(emptyRow);
+                    }
+                } catch (error) {
+                    console.error('Error loading products:', error);
+
+                    const errorRow = document.createElement('div');
+                    errorRow.className = 'product-table-row failed-row';
+                    errorRow.innerHTML = `<div colspan="6" style="text-align: center;">No products found.</div>`;
+                    productTableContainer.appendChild(errorRow);
+                }
+            }
+            async function searchProducts() {
+                const query = searchInput.value.trim();
+                await loadProducts(query);
+            } searchButton.addEventListener('click', searchProducts);
+
+
+            async function deleteProduct(productId) {
+                try {
+                    const confirmation = confirm(`Are you sure you want to delete product ID: ${productId}?`);
+                    if (!confirmation) return;
+
+                    const result = await callProductWS('/product', 'deleteProduct', { ProductID: productId });
+
+                    // ตรวจสอบผลลัพธ์การลบ
+                    if (!result || result.error || result.data === 0) {
+                        throw new Error('Product deletion failed or no response data.');
+                    }
+
+                    alert('Product deleted successfully.');
+
+                    // ลบแถวที่ถูกลบออกจากตารางใน UI
+                    const rowToDelete = document.querySelector(`.delete-btn[data-id="${productId}"]`).closest('.product-table-row');
+                    if (rowToDelete) {
+                        rowToDelete.remove();
+                    }
+                } catch (error) {
+                    alert('Failed to delete product. Please try again.');
+                    console.error('Error deleting product:', error);
+                }
+            }
+
+
+            await loadProducts();
+        });
+        // ------------- profile  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        // ------------- logout  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('.logout-btn');
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        // ลบ Token ออกจาก Local Storage
+                        localStorage.removeItem('authToken');
+
+                        // เปลี่ยนเส้นทางกลับไปยังหน้า Login
+                        window.location.href = '/login';
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+            }
+        });
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>

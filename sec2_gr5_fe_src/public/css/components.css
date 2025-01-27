@@ -1,0 +1,436 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Konkhmer+Sleokchher&family=Staatliches&display=swap');
+
+
+                            /*header*/
+* {
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+#nameproject {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 10px; 
+  text-align: center; 
+  color: rgba(66, 60, 61, 1); 
+  background-color: rgba(233, 205, 255, 1); 
+  padding: 4.3px; 
+  box-sizing: border-box;
+  height: auto; 
+  width: auto;
+}
+.grouppage {
+  list-style-type: none;
+  display: flex; 
+  list-style: none;
+  cursor: pointer;
+}
+
+
+.dropdownproduct{
+  display: none;
+}
+
+.dropdownproduct li {
+  display: block;
+}
+
+.page a, .product, .pageproduct, .pagedropdown a{
+  display: inline-block;
+  position: relative;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 15px;
+  color: rgba(255, 133, 188, 1);
+  text-decoration: none;
+}
+
+
+
+.page a, .product{
+  padding-left: 20px;
+  margin-left: 45px;
+  padding-right: 20px;
+}
+
+
+
+.dropdownproduct {
+  display: none; 
+  border-radius: 0px; 
+  background-color: white; 
+  position: absolute; 
+  z-index: 1; 
+  text-decoration: none;
+  left: 0; 
+  width: max-content; 
+  white-space: nowrap; 
+}
+
+.dropdownproduct li a {
+  text-decoration: none;
+  color: rgba(255, 178, 212, 1);
+  padding-left: 32px; 
+  padding-right: 32px; 
+  display: block; 
+}
+
+
+.currentpage a{
+  padding-left: 20px;
+  margin-left: 45px;
+  padding-right: 20px;
+  display: inline-block;
+  position: relative;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 15px;
+  color: rgba(255, 57, 146, 1);
+  text-decoration: none;
+  background-color: rgba(255, 216, 233, 1);
+  border-radius: 15px;
+}
+
+
+.page a:hover, .pageproduct:hover {
+  color: rgba(255, 57, 146, 1); 
+}
+.product:hover {
+  color: rgba(255, 57, 146, 1);
+  background-color: rgba(255, 216, 233, 1);
+  border-radius: 15px;
+  display: block;
+}
+
+.product:hover .dropdownproduct {
+  display: block; 
+}
+
+.dropdownproduct li a:hover {
+  color: rgba(255, 57, 146, 1);
+  background-color: rgb(247, 243, 243);
+  width: auto;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -45px;
+  box-shadow: 0 4px 4px 0 rgba(110, 108, 108, 0.25);
+  border-radius: 50%;
+}
+
+
+header { /* เพิ่ม*/
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+  box-shadow: 0 4px 4px 0 rgba(110, 108, 108, 0.25);
+  }
+
+#navbar {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  background-color: white;
+  position: relative;
+  
+}
+.search, .activesearch {
+  padding: 0.5px 30px;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 15px;
+  color: rgba(255, 57, 146, 1);
+  background-color: rgba(245, 235, 237, 1);
+  border-radius: 15px;
+}
+
+.search a{
+  text-decoration: none;
+  color: rgba(255, 57, 146, 1);
+}
+
+.search:hover{
+  background-color: rgba(255, 95, 167, 1);
+}
+
+.search:hover a {
+  color: white; 
+}
+
+.activesearch {
+  background-color: rgba(255, 95, 167, 1);
+}
+.activesearch a {
+  text-decoration: none;
+  color: white; 
+}
+
+.user {
+  margin-left: 25px;
+  padding-right: 25px;
+  margin-right: 65px;
+  background-color: rgba(255, 190, 219, 1);
+  border-radius: 15px;
+  display: flex;    
+  align-items: center;
+}
+
+.user-link {
+  display: flex; 
+  align-items: center;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: 1.5px;   
+  text-decoration: none;
+  color: rgba(255, 57, 146, 1);
+  border-radius: 15px;
+
+}
+
+
+
+
+#usericon {
+  width: 30px;  
+  height: 30px; 
+  object-fit: cover;
+  margin-right: 10px; 
+  margin-left: 0px;     
+  background-color: rgba(255, 220, 226, 1); 
+  border-radius: 50%;          
+} 
+
+.user:hover a {
+  color: white;
+}
+
+.bars {
+  display: none;
+}
+
+.dropdownmenu {
+  display: none;
+}
+
+
+
+
+/*.........................................................*/
+
+                            /*footer*/
+footer {
+  font-family: 'Staatliches';
+  width: 100%;
+  background-color: #EACCFF;
+  text-align: center;
+  padding: 1px;
+  display: flex;
+  justify-content: center;
+
+
+}
+
+footer .footer-content p {
+  margin-left: 10px;
+  font-size: 15px;
+  color: #CC8FF7;
+  display: flex;
+  align-items: center;
+
+
+
+}
+
+footer .footer-logo {
+  width: 45px;
+  height: auto;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+footer .footer-content span {
+  margin-left: 10px;
+  letter-spacing: 5px;
+  color: #AF79D4;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+
+}
+
+
+@media screen and (max-width: 1120px) {
+
+  .search, .activesearch, .user{
+    padding: 0px;
+    margin: 0px;
+  }
+ 
+  .page, .product, .user-link, .currentpage{
+    display: none; 
+  }
+  .user {
+    background-color: transparent;
+  }
+  .logo {
+    width: 90px;
+    height: auto;
+    padding: 0px 10px;
+    margin: 0px;
+    margin-left: 10px;
+    box-shadow: none;
+  }
+
+
+  .bars {
+    display: block;
+    margin-right: 20px;
+    margin-left: 10px;
+  }
+
+  .bar1, .bar2, .bar3 {
+    width: 25px;
+    height: 4px;
+    border-radius: 10px;
+    background-color: rgba(255, 57, 146, 1);
+    margin: 4.1px 0;
+    transition: 0.4s;
+  }
+  
+
+  .change .bar1 {
+    transform: translate(0, 8px) rotate(-45deg);
+  }
+  
+  
+  .change .bar2 {opacity: 0;}
+  
+  
+  .change .bar3 {
+    transform: translate(0, -8px) rotate(45deg);
+  }
+
+
+  
+
+  .center-logo {
+    position: static;
+    transform: none;
+    margin-left: 10px;
+  }
+  .left-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+  }
+
+  .right-group {
+    margin-left: auto; 
+  }
+
+  .usericon {
+    display: block;
+  }
+
+
+  
+
+ 
+  .search {
+   margin-right: 20px;
+ }
+
+  .bars:hover {
+   box-shadow: 0 4px 4px 0 rgba(110, 108, 108, 0.25);
+   border-radius: 5px;
+ }
+
+ .dropdownmenu {
+  display: none;
+  position: absolute;
+  z-index: 1; 
+  text-decoration: none;
+  left: 0; 
+  width: 100%; 
+  white-space: nowrap;
+  top:96px;
+  max-height: 0; 
+  overflow: hidden; 
+  transition: max-height 0.3 ease, transform 0.3s ease; 
+  transform: translateY(-20px);
+  opacity: 0;
+ }
+
+
+ .dropdownmenu li {
+  display: block;
+  background-color: white;
+ }
+
+ .dropdownmenu :hover, .pagedropdown:hover {
+  color: rgba(255, 57, 146, 1);
+  background-color: rgb(247, 243, 243);
+ }
+
+
+
+
+ .pageproduct, .pagedropdown{
+  margin: 0px;
+  padding: 10px 10px 10px 65px;
+ }
+ .dropdownmenu-active {
+  display: block !important;
+  max-height: 500px; /* ตั้งค่าความสูงสูงสุดเมื่อเมนูแสดง */
+  transform: translateY(0);
+  opacity: 1;
+ }
+
+ .dropdownproduct2{
+  display: none;
+ }
+
+ .dropdownproduct2 li a{
+  color: rgba(255, 178, 212, 1);
+  text-decoration: none;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 15px;
+  padding-left: 90px;
+ }
+ 
+
+ .dropdownproduct2.active{
+  display: block;
+  position: relative;
+  width: 100%;
+ }
+
+ .dropdownproduct2 li:hover {
+  color: rgba(255, 57, 146, 1);
+ 
+ }
+ .dropdownmenu-active .productshow {
+  color: rgba(255, 57, 146, 1);
+  background-color: rgba(233, 205, 255, 1);
+ }
+
+ 
+
+ 
+ 
+
+  }

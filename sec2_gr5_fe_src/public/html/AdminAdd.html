@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/AdminAdd.css">
+    <link rel="stylesheet" href="/css/components2.css">
+</head>
+
+<body>
+   <!-- Navigation Sidebar -->
+   <div class="navbar">
+    <div class="logo">
+        <img src="/images/Normal_page/Logo.png" alt="CupiCute Logo">
+    </div>
+    <ul class="menu">
+        <li>
+            <a href="/">
+                <div class="icon-background">
+                    <img class="menu-icon" src="/images/Normal_page/house-solid.svg" alt="Home Icon">
+                </div>
+                <i class="fa fa-home"></i> Home
+            </a>
+        </li>
+        <li>
+            <a href="/Product_view">
+                <div class="icon-background">
+                    <img class="menu-icon" src="/images/Normal_page/bag-shopping-solid.svg" alt="Product Icon">
+                </div>
+                <i class="fa fa-pr"></i> Product Management
+            </a>
+        </li>
+        <li>
+            <a href="/Admin">
+                <div class="icon-background">
+                    <img class="menu-icon" src="/images/Normal_page/user-large-solid.svg" alt="User Icon">
+                </div>
+                <i class="fa fa-users"></i> User Management
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/images/Normal_page/user-solid.svg" alt="User Image">
+                <h1>Add Admin</h1>
+            </div>
+            <div class="header-right">
+                <img id="usericon" src="/images/Normal_page/circle-user-regular.svg" alt="User Image">
+                <span>USERNAME</span>
+                <img src="/images/Normal_page/right-to-bracket-solid.svg" alt="Logout_Icon">
+                <a href="#" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Information Section -->
+            <section class="info-section">
+                <h3>INFORMATION</h3>
+                
+                <div class="info-grid">
+                    <div class="group1">
+                        <div class="profile-image">
+                            <!-- <img src="/images/Normal_page/101.jpg" alt="Profile Picture Placeholder"> -->
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="phoneNumber" placeholder="xxx-xxx-xxxx">
+                        </div>
+                        <div class="form-group" id="group2_4">
+                            <label>Email</label>
+                            <input type="email" id="email" placeholder="Hello@gmail.com">
+                        </div>
+                    </div>
+                    <div class="group2">
+                        <div class="form-group" id="group2_0">
+                            <label>User ID</label>
+                            <input type="text" id="userId" placeholder="xxx">
+                        </div>
+                        <div class="form-group" id="group2_1">
+                            <label>Admin ID</label>
+                            <input type="text" id="AdminId" placeholder="6xxxxxx">
+                        </div>
+                        <div class="form-group" id="group2_2">
+                            <label>First Name</label>
+                            <input type="text" id="FirstName" placeholder="Enter FirstName">
+                        </div>
+                        <div class="form-group" id="group2_3">
+                            <label>Last Name</label>
+                            <input type="text" id="LastName" placeholder="Enter LastName">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Login Credentials Section -->
+            <section class="login-section">
+                <h3>LOGIN CREDENTIALS</h3>
+                <div class="login-grid">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter password">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons Section -->
+            <div class="buttons">
+                <button class="cancel-btn" onclick="window.location.href='/Admin'">Cancel</button>
+                <button class="save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+        <!-- ...............   script   ........................... -->
+
+    <script type="module">
+        import { callUserAdminWS } from "/callUserAdminWS.js";
+        import { callLoginWS } from "/callLoginWS.js";
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.querySelector('.save-btn');
+    
+    // ฟังก์ชันสำหรับบันทึกข้อมูล
+    async function save() {
+        saveButton.disabled = true;
+
+        try {
+            const userId = document.getElementById('userId').value;
+            const adminId = document.getElementById('AdminId').value;
+            const firstname = document.getElementById('FirstName').value;
+            const lastname = document.getElementById('LastName').value;
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!userId || !adminId || !firstname || !lastname || !email || !phoneNumber || !username || !password) {
+                alert('Please fill in all the required fields.');
+                return;
+            }
+
+            const user = {
+                UserID: userId,
+                UserName: username,
+                U_Password: password
+            };
+
+            const admin = {
+                AdminID: adminId,
+                FirstName: firstname,
+                Lastname: lastname,
+                Email: email,
+                PhoneNumber: phoneNumber
+            };
+
+            const payload = {
+                user, 
+                admin
+            };
+            console.log("Payload:", payload);
+
+
+            // ใช้ callUserAdminWS
+            const result = await callUserAdminWS('POST', 'userAdmin', payload);
+            console.log(result)
+
+            if (result.error) {
+                alert(`Failed to save user: ${result.message || 'Unknown error'}`);
+                console.error(result.message);
+                return;
+            }
+
+            alert('User saved successfully.');
+            window.location.replace('/Admin');
+        } catch (error) {
+            alert(`Failed to connect to the server. Error: ${error.message}`);
+            console.error('Error saving user:', error);
+        } finally {
+            saveButton.disabled = false;
+        }
+    }
+
+    // เชื่อมปุ่มกับฟังก์ชัน save
+    saveButton.addEventListener('click', save);
+});
+// ------------- profile  -------------
+document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        // ------------- logout  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('.logout-btn');
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        // ลบ Token ออกจาก Local Storage
+                        localStorage.removeItem('authToken');
+
+                        // เปลี่ยนเส้นทางกลับไปยังหน้า Login
+                        window.location.href = '/login';
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>

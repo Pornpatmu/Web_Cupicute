@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product_Adding</title>
+    <link rel="stylesheet" href="/css/ProductAdd.css">
+    <link rel="stylesheet" href="/css/components2.css">
+    <!-- <script src="/Product_add.js"></script> -->
+
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/images/Normal_page/Logo.png" alt="CupiCute Logo">
+        </div>
+        <ul class="menu">
+            <li>
+                <a href="/">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/house-solid.svg" alt="Home Icon">
+                    </div>
+                    <i class="fa fa-home"></i> Home
+                </a>
+            </li>
+            <li>
+                <a href="/Product_view">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/bag-shopping-solid.svg" alt="Product Icon">
+                    </div>
+                    <i class="fa fa-pr"></i> Product Management
+                </a>
+            </li>
+            <li>
+                <a href="/Admin">
+                    <div class="icon-background">
+                        <img class="menu-icon" src="/images/Normal_page/user-large-solid.svg" alt="User Icon">
+                    </div>
+                    <i class="fa fa-users"></i> User Management
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/images/Normal_page/bag-shopping-solid-pink.svg" alt="Product Icon">
+                <h1>PRODUCT ADDING</h1>
+            </div>
+            <div class="header-right">
+                <img id="usericon" src="/images/Normal_page/circle-user-regular.svg" alt="User Image">
+                <span>USERNAME</span>
+                <img src="/images/Normal_page/right-to-bracket-solid.svg" alt="Logout_Icon">
+                <a href="#" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <!-- /Form สำหรับ Add  Product -->
+        <form action="" method="" id="fromid">
+            <section class="product-form">
+
+                <!-- Add Image -->
+                <div class="product-image">
+                    <label for="text_Product_image">PRODUCT IMAGE</label><br>
+                    <div class="image-placeholder"></div>
+                </div>
+
+
+                <div class="form-fields">
+
+                    <div class="row">
+                        <div class="column">
+                            <label for="input_text_Pro_name">PRODUCT NAME</label>
+                            <input id="input_text_Pro_name" type="text" placeholder="Product Name" class="input-text"
+                                name="pro_name" title="please put product name" required><br>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="column">
+                            <label for="category_select">CATEGORY</label>
+                            <select id="category_select" class="input-select" name="pro_category"
+                                title="please chose product's category" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Lips">Lips</option>
+                                <option value="Foundation">Foundation</option>
+                                <option value="Blush">Blush</option>
+                                <option value="Mascara">Mascara</option>
+                                <option value="Highlighter">Highlighter</option>
+                            </select>
+                            <!-- <input id="input-text-category" type="text" placeholder="Category" class="input-text"> -->
+                        </div>
+                        <div class="column">
+                            <label for="input_text_price">PRICEE</label>
+                            <input id="input_text_price" type="text" placeholder="Price" class="input-text "
+                                name="pro_price" title="please put product's price" required>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="column">
+                            <label for="input_text_describtion">DESCRIBTION</label>
+                            <textarea id="input_text_describtion" type="text" placeholder="Description" name="pro_des"
+                                title="please put the Description" required></textarea><br>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="column">
+                            <label for="input_text_Pro_id">PRODUCT ID</label>
+                            <input id="input_text_Pro_id" type="text" placeholder="000" class="input-text" name="pro_id"
+                                title="please add product id" required>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <div>
+                            <button class="cancel-btn" onclick="window.location.href='/Product_view'">Cancel</button>
+                        </div>
+                        <div>
+                            <button class="save" id="save" type="submit"
+                                onclick="handleFormSubmit(event) ">Save</button>
+
+                        </div>
+                    </div>
+            </section>
+        </form>
+        </main>
+    </div>
+    <!-- ...............   script   ........................... -->
+
+    <script type="module">
+
+
+        import { callProductWS } from "/callProductWS.js";
+        import { callLoginWS } from "/callLoginWS.js";
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // ใส่โค้ด JavaScript ทั้งหมดของคุณที่นี่
+            const form = document.getElementById('fromid');
+            const productNameInput = document.getElementById('input_text_Pro_name');
+            const categorySelect = document.getElementById('category_select');
+            const priceInput = document.getElementById('input_text_price');
+            const descriptionInput = document.getElementById('input_text_describtion');
+            const productIdInput = document.getElementById('input_text_Pro_id');
+            const imagePlaceholder = document.querySelector('.image-placeholder');
+            const cancelButton = document.querySelector('.cancel');
+            const saveButton = document.querySelector('.save');
+
+            let formData = {};
+
+
+            // ฟังก์ชันสำหรับการแปลง Category เป็น CategoryID
+            function getCategoryID(category) {
+                const categoryMap = {
+                    'Lips': '1',
+                    'Foundation': '2',
+                    'Blush': '3',
+                    'Mascara': '4',
+                    'Highlighter': '5'
+                };
+                return categoryMap[category] || ''; // ถ้าไม่เจอจะคืนค่าเป็นค่าว่าง
+            }
+
+
+            async function handleFormSubmit(event) {
+                event.preventDefault();
+
+                const categoryID = getCategoryID(categorySelect.value);
+
+                const bodyData = {
+                    ProductName: productNameInput.value,
+                    CategoryID: categoryID,
+                    Price: priceInput.value,
+                    P_Description: descriptionInput.value,
+                    ProductID: productIdInput.value,
+                };
+
+                console.log("Data before sending to server:", bodyData);
+
+                try {
+                    const response = await callProductWS('/product', 'insertProduct', bodyData);
+                    console.log('Product added:', response);
+                    alert('Product added successfully!');
+                    window.location.href = '/Product_view';
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    alert('Failed to add product.');
+                }
+            }
+
+            // ใช้ฟังก์ชันนี้ใน event listener
+            form.addEventListener('submit', handleFormSubmit);
+        });
+       // ------------- profile  -------------
+       document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        // ------------- logout  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('.logout-btn');
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        // ลบ Token ออกจาก Local Storage
+                        localStorage.removeItem('authToken');
+
+                        // เปลี่ยนเส้นทางกลับไปยังหน้า Login
+                        window.location.href = '/login';
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>

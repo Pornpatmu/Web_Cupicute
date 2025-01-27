@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CupiCute</title>
+    <link rel="stylesheet" href="/css/Search_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <script src="header.js" defer></script>
+</head>
+<body id="detailpage">
+
+    <header>
+        <div id="nameproject">PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</div>
+        <div id="navbar">
+            <div class="left-group">
+                <nav>
+                    <ul class="grouppage" id="grouppage1">
+                        <li class="page"><a href="/">Home</a></li>
+                        <li class="product" onclick="showproduct()">Product <i class="fa-solid fa-caret-down"></i>
+                            <ul class="dropdownproduct">
+                                <li><a href="/Search?category=Lips">LIPS</a></li>
+                                <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                                <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                                <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                                <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                            </ul>
+                        </li>
+                        <li class="page"><a href="/Team">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="center-logo">
+                <img class="logo" src="images/Normal_page/logo_whiteHD.png" alt="Logo">
+            </div>
+
+            <div class="right-group">
+                <nav>
+                    <ul class="grouppage" id="grouppage2">
+                        <li class="search"><a href="/Search">Search</a></li>
+                        <li class="search"><a href="/login">Login</a></li>
+                        <li class="user">
+                            <img id="usericon" src="images/Normal_page/usericon.jpg" alt="User Icon" class="user-image">
+                            <span class="user-link">username</span>
+                        </li>
+                        <li>
+                            <div class="bars" onclick="showMenu(this)">
+                                <div class="bar1"></div>
+                                <div class="bar2"></div>
+                                <div class="bar3"></div>
+                            </div>
+                            <ul class="dropdownmenu">
+                                <li class="pagedropdown"><a href="/">Home</a></li>
+                                <li class="pageproduct" onclick="showProduct(this)">Product <i class="fa-solid fa-caret-down"></i></li>
+                                <li>
+                                    <ul class="dropdownproduct2">
+                                        <li><a href="/Search?category=Lips">LIPS</a></li>
+                                        <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                                        <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                                        <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                                        <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                                    </ul>
+                                </li>
+                                <li class="pagedropdown"><a href="/Team">About Us</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="detail">
+        <div class="primaryimageproduct">
+            <img id="primaryimage" src="" alt="Product">
+        </div>
+
+        <div class="productinfo">
+            <div>
+                <p id="productname">Product Name</p>
+                <p id="productprice">Price</p>
+                <p id="productid">ID:</p>
+                <p id="productdescription" class="description-text"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>COPYRIGHT BY <span>CUPICUTE <img src="/images/Normal_page/logo_whiteFT.png" class="footer-logo" alt="CUPICUTE Logo"></span> PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { callLoginWS } from "/callLoginWS.js";
+
+        // Get Product ID from URL
+        function getProductIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let productId = urlParams.get('id');
+
+            // Add leading zeroes if productId is less than 3 characters
+            if (productId && productId.length < 3) {
+                productId = productId.padStart(3, '0');
+            }
+
+            return productId;
+        }
+
+        const productId = getProductIdFromURL();
+
+        if (productId) {
+            fetch(`http://localhost:3002/product/${productId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('productname').innerText = 'Error: ' + data.error;
+                        document.getElementById('productprice').innerText = '';
+                        document.getElementById('productid').innerText = '';
+                        document.getElementById('productdescription').innerText = '';
+                    } else {
+                        const product = data.data;
+                        document.getElementById('primaryimage').src = product.ImageURL || 'default-image.jpg';
+                        document.getElementById('productname').innerText = product.ProductName || 'Product Name Unavailable';
+                        document.getElementById('productprice').innerText = product.Price ? '$' + product.Price : 'Price Unavailable';
+                        document.getElementById('productid').innerText = 'ID: ' + product.ProductID || 'ID Unavailable';
+                        document.getElementById('productdescription').innerText = product.P_Description || 'Description Unavailable';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching product data:', error);
+                    document.getElementById('productname').innerText = 'Error loading product details.';
+                });
+        } else {
+            document.getElementById('productname').innerText = 'Product ID not found.';
+        }
+
+        // Toggle product description visibility
+        // ------------- profile  -------------
+        document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+        
+    </script>
+
+</body>
+</html>

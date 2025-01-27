@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CupiCute</title>
+    <link rel="stylesheet" href="/css/Search_detail.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/components.css" />
+    <script src="header.js" defer></script>
+  </head>
+  <body id="searchpage">
+    <header>
+      <div id="nameproject">
+        PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS
+      </div>
+      <div id="navbar">
+        <div class="left-group">
+          <nav>
+            <ul class="grouppage" id="grouppage1">
+              <li class="page"><a href="/">Home</a></li>
+              <li class="product" onclick="showproduct()">
+                Product <i class="fa-solid fa-caret-down"></i>
+                <ul class="dropdownproduct">
+                  <li><a href="/Search?category=Lips">LIPS</a></li>
+                  <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                  <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                  <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                  <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                </ul>
+              </li>
+              <li class="page"><a href="/Team">About Us</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="center-logo">
+          <img
+            class="logo"
+            src="images/Normal_page/logo_whiteHD.png"
+            alt="Logo"
+          />
+        </div>
+
+        <div class="right-group">
+          <nav>
+            <ul class="grouppage" id="grouppage2">
+              <li class="activesearch"><a href="/Search">Search</a></li>
+              <li class="search"><a href="/login">Login</a></li>
+              <li class="user">
+                <img
+                  id="usericon"
+                  src="images/Normal_page/usericon.jpg"
+                  alt="User Icon"
+                  class="user-image"
+                />
+                <span class="user-link">username</span>
+              </li>
+              <li>
+                <div class="bars" onclick="showMenu(this)">
+                  <div class="bar1"></div>
+                  <div class="bar2"></div>
+                  <div class="bar3"></div>
+                </div>
+                <ul class="dropdownmenu">
+                  <li class="pagedropdown"><a href="/">Home</a></li>
+                  <li class="pageproduct" onclick="showProduct(this)">
+                    Product <i class="fa-solid fa-caret-down"></i>
+                  </li>
+                  <li>
+                    <ul class="dropdownproduct2">
+                      <li><a href="/Search?category=Lips">LIPS</a></li>
+                      <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                      <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                      <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                      <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                    </ul>
+                  </li>
+                  <li class="pagedropdown"><a href="/Team">About Us</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div id="txtproject">PRODUCT</div>
+    <form id="searching">
+      <fieldset>
+        <label for="txtTitle">TITLE</label>
+        <input
+          type="text"
+          id="txtTitle"
+          name="txtTitle"
+          placeholder="Enter title"
+        />
+
+        <label for="txtCategory">CATEGORY</label>
+        <select id="txtCategory" name="txtCategory">
+          <option value="">Select Category</option>
+        </select>
+
+        <label for="minPrice">PRICE</label>
+        <input
+          type="number"
+          id="minPrice"
+          name="minPrice"
+          placeholder="MIN"
+          step="10"
+        />
+
+        <span class="dash">---</span>
+
+        <input
+          type="number"
+          id="maxPrice"
+          name="maxPrice"
+          placeholder="MAX"
+          step="10"
+        />
+
+        <button type="submit">SEARCH</button>
+      </fieldset>
+    </form>
+
+    <div id="showproduct"></div>
+
+    <script type="module">
+        import { callLoginWS } from "/callLoginWS.js";
+
+      import { callProductWS } from "/callProductWS.js";
+
+      function renderProducts(products) {
+        const productContainer = document.getElementById("showproduct");
+        productContainer.innerHTML = ""; // Clear old content
+
+        if (products.length === 0) {
+          productContainer.innerHTML = "<p>No products found.</p>";
+          return;
+        }
+
+        products.forEach((product) => {
+          const productCard = document.createElement("div");
+          productCard.classList.add("product-card");
+          productCard.dataset.productid = product.ProductID; // Add data attribute for product ID
+          productCard.innerHTML = `
+            <img src="${product.ImageURL || "default-image.jpg"}" alt="${product.ProductName}">
+            <h3>${product.ProductName}</h3>
+            <p class="productdescription">${product.P_Description || "No description available"}</p>
+            <p class="product-price">${product.Price ? `${product.Price} ฿` : "Price not available"}</p>
+          `;
+          productContainer.appendChild(productCard);
+        });
+
+        // Add event listeners to product cards after they're rendered
+        document.querySelectorAll('.product-card').forEach(card => {
+          card.addEventListener('click', function () {
+            const productID = this.dataset.productid;
+            goToDetailPage(productID);
+          });
+        });
+      }
+
+      function loadCategories() {
+        const categorySelect = document.getElementById("txtCategory");
+        const categoryIdList = [
+          "Lips",
+          "Foundation",
+          "Blush",
+          "Mascara",
+          "Highlight",
+        ];
+        categorySelect.innerHTML = '<option value="">Select Category</option>';
+        categoryIdList.forEach((category) => {
+          const option = document.createElement("option");
+          option.value = category;
+          option.textContent = category;
+          categorySelect.appendChild(option);
+        });
+      }
+
+      function filterProducts(products, { title, category, minPrice, maxPrice }) {
+        let filteredProducts = products;
+
+        if (title) {
+          filteredProducts = filteredProducts.filter((product) =>
+            (product.ProductName || "").toLowerCase().includes(title.toLowerCase())
+          );
+        }
+
+        if (category) {
+          const categoryIdList = ["Lips", "Foundation", "Blush", "Mascara", "Highlight"];
+          const categoryFilter = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+          const categoryId = categoryIdList.indexOf(categoryFilter) + 1;
+          filteredProducts = filteredProducts.filter((product) => product.CategoryID == categoryId);
+        }
+
+        if (minPrice) {
+          filteredProducts = filteredProducts.filter((product) => parseFloat(product.Price) >= minPrice);
+        }
+
+        if (maxPrice) {
+          filteredProducts = filteredProducts.filter((product) => parseFloat(product.Price) <= maxPrice);
+        }
+
+        return filteredProducts;
+      }
+
+      document.getElementById("searching").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const title = document.getElementById("txtTitle").value.trim();
+        const category = document.getElementById("txtCategory").value.trim();
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
+
+        const params = {
+          title: title || undefined,
+          category: category || undefined,
+          minPrice: minPrice ? parseFloat(minPrice) : undefined,
+          maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+        };
+
+        try {
+          const productResponse = await callProductWS("/products", "getProducts", params);
+          if (productResponse && productResponse.data) {
+            const filteredProducts = filterProducts(productResponse.data, params);
+            renderProducts(filteredProducts);
+          } else {
+            console.error("No products returned from the Web Service.");
+            document.getElementById("showproduct").innerHTML = "<p>No products found.</p>";
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      });
+
+
+      loadCategories();
+
+      document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get("category");
+
+  if (category) {
+    // ใช้ค่าหมวดหมู่จาก URL เพื่อกรองสินค้า
+    document.getElementById("txtCategory").value = category;
+    const form = document.getElementById("searching");
+    form.dispatchEvent(new Event("submit")); // ทำการ submit ฟอร์มเพื่อกรองสินค้า
+  }
+});
+function goToDetailPage(productID) {
+      if (productID) {
+        console.log("Navigating to product with ID:", productID);
+        window.location.href = `/Detail?id=${productID}`;
+      } else {
+        console.error("Product ID is not defined.");
+      }
+    }
+    window.goToDetailPage = function (productID) {
+      console.log(productID);
+      window.location.href = `/Detail?id=${productID}`;
+    };
+
+    // Add event listeners to product cards dynamically
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const productID = this.dataset.productid;
+        goToDetailPage(productID);
+      });
+    });
+    // ------------- profile  -------------
+    document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+
+    </script>
+
+    <footer>
+      <div class="footer-content">
+        <p>
+          COPY RIGHT BY
+          <span
+            >CUPICUTE
+            <img
+              src="/images/Normal_page/logo_whiteFT.png"
+              class="footer-logo"
+              alt="CUPICUTE Logo"
+            />
+          </span>
+          PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

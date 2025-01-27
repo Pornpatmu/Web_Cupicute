@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/Home_Style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="header.js"></script>
+ 
+  
+</head>
+
+<body>
+<!-- =================== HEADER  =================== -->
+<header>
+  <div id="nameproject">PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</div>
+  <div id="navbar">
+    <div class="left-group">
+        <nav>
+            <ul class="grouppage" id="grouppage1">
+                <li class="currentpage"><a href="/">Home</a></li>
+                <li class="product" onclick="showproduct()">Product <i class="fa-solid fa-caret-down"></i>
+                    <ul class="dropdownproduct">
+                      <li><a href="/Search?category=Lips">LIPS</a></li>
+                      <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                      <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                      <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                      <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                    </ul>
+                </li>
+                <li class="page"><a href="/Team">About Us</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="center-logo">
+        <img class="logo" src="images/Normal_page/logo_whiteHD.png" alt="Logo">
+    </div>
+
+    <div class="right-group">
+        <nav>
+            <ul class="grouppage" id="grouppage2">
+                <li class="search"><a href="/Search">Search</a></li>
+                <li class="search"><a href="/login">Login</a></li>
+                <li class="user">
+          
+                    <img id="usericon" src="images/Normal_page/usericon.jpg" alt="User Icon" class="user-image">
+                    <span class="user-link">username</span>
+              </li>
+              
+                <li><div class="bars" onclick="showMenu(this)">
+                  <div class="bar1"></div>
+                  <div class="bar2"></div>
+                  <div class="bar3"></div>
+              </div>
+                  <ul class="dropdownmenu">
+                    <li class="pagedropdown"><a href="/">Home</a></li>
+                    <li class="pageproduct" onclick="showProduct(this)">Product <i class="fa-solid fa-caret-down"></i></li>
+                    <li>
+                        <ul class="dropdownproduct2">
+                          <li><a href="/Search?category=Lips">LIPS</a></li>
+                          <li><a href="/Search?category=Blush">BLUSH ON</a></li>
+                          <li><a href="/Search?category=Highlight">HIGHLIGHTER</a></li>
+                          <li><a href="/Search?category=Foundation">FOUNDATION</a></li>
+                          <li><a href="/Search?category=Mascara">MASCARA</a></li>
+                        </ul>
+                    </li>
+                    <li class="pagedropdown"><a href="/Team">About Us</a></li>
+                </ul>
+              </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</header>
+
+
+
+<!-- =================== MAIN CONTENT =================== -->
+<main>
+    <div class="box_g1">
+      <div class="box_g1-content">
+        <p>
+        <h3>CUPICUTE</h3><img src="/images/Normal_page/png_box1.png" class="box1-image"></p>
+      </div>
+    </div>
+    <!-- category -->
+    <div class="topic">
+      <p>CATEGORY</p>
+      <div class="topic-line"></div>
+    </div>
+
+    <div class="category-section">
+      <!-- LIPS -->
+<a href="/Search?category=Lips" class="category-container">
+  <p>LIPS</p>
+  <div class="category-card" id="category1">
+      <img src="/images/Normal_page/lips_icon.png" alt="Lips">
+  </div>
+</a>
+
+<!-- BLUSH ON -->
+<a href="/Search?category=Blush" class="category-container">
+  <p>BLUSH ON</p>
+  <div class="category-card" id="category2">
+      <img src="/images/Normal_page/blushon_icon.png" alt="Blush On">
+  </div>
+</a>
+
+<!-- HIGHLIGHTER -->
+<a href="/Search?category=Highlight" class="category-container">
+  <p>HIGHLIGHTER</p>
+  <div class="category-card" id="category3">
+      <img src="/images/Normal_page/highlighter_icon.png" alt="Highlighter">
+  </div>
+</a>
+
+<!-- FOUNDATION -->
+<a href="/Search?category=Foundation" class="category-container">
+  <p>FOUNDATION</p>
+  <div class="category-card" id="category4">
+      <img src="/images/Normal_page/foundation_icon.png" alt="Foundation">
+  </div>
+</a>
+
+<!-- MASCARA -->
+<a href="/Search?category=Mascara" class="category-container">
+  <p>MASCARA</p>
+  <div class="category-card" id="category5">
+      <img src="/images/Normal_page/mascara_icon.png" alt="Mascara">
+  </div>
+</a>
+    </div>
+
+    <!-- ******************************* -->
+ <!-- NEW PRODUCT -->
+<div class="topic">
+  NEW PRODUCT
+  <div class="topic-line"></div>
+</div>
+
+<div class="product-section">
+  <div class="product-card new" id="newproduct1" data-productid="1">
+    <div class="new-label">New</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="productname1"></h3>
+    <p class="product-description">This is a short description of the product 1.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 1 -->
+
+  <div class="product-card new" id="newproduct2" data-productid="2">
+    <div class="new-label">New</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="productname2"></h3>
+    <p class="product-description">This is a short description of the product 2.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 2 -->
+
+  <div class="product-card new" id="newproduct3" data-productid="3">
+    <div class="new-label">New</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="productname3"></h3>
+    <p class="product-description">This is a short description of the product 3.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 3 -->
+
+  <div class="product-card new" id="newproduct4" data-productid="4">
+    <div class="new-label">New</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="productname4"></h3>
+    <p class="product-description">This is a short description of the product 4.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 4 -->
+</div>
+
+<!-- ******************************* -->
+
+<!-- PRODUCT -->
+<div class="topic-product">
+  PRODUCT
+</div>
+
+<div class="product-section">
+  <div class="product-card" id="product1" data-productid="5">
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="tproductname1"></h3>
+    <p class="product-description">This is a short description of the product 1.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 1 -->
+
+  <div class="product-card" id="product2" data-productid="6">
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="tproductname2"></h3>
+    <p class="product-description">This is a short description of the product 2.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 2 -->
+
+  <div class="product-card" id="product3" data-productid="7">
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="tproductname3"></h3>
+    <p class="product-description">This is a short description of the product 3.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 3 -->
+
+  <div class="product-card" id="product4" data-productid="8">
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="tproductname4"></h3>
+    <p class="product-description">This is a short description of the product 4.</p>
+    <p class="product-price"></p>
+  </div> <!-- Product 4 -->
+</div>
+
+<!-- COMING SOON PRODUCT -->
+<div class="topic">
+  COMING SOON
+  <div class="topic-line"></div>
+</div>
+
+<div class="product-section">
+  <div class="product-card coming-soon" id="comingsoon1" data-productid="cs1">
+    <div class="coming-soon-label">Coming Soon</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="csproductname1"></h3>
+    <p class="product-description"></p>
+    <p class="product-price"></p>
+  </div>
+
+  <div class="product-card coming-soon" id="comingsoon2" data-productid="cs2">
+    <div class="coming-soon-label">Coming Soon</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="csproductname2"></h3>
+    <p class="product-description"></p>
+    <p class="product-price"></p>
+  </div>
+
+  <div class="product-card coming-soon" id="comingsoon3" data-productid="cs3">
+    <div class="coming-soon-label">Coming Soon</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="csproductname3"></h3>
+    <p class="product-description"></p>
+    <p class="product-price"></p>
+  </div>
+
+  <div class="product-card coming-soon" id="comingsoon4" data-productid="cs4">
+    <div class="coming-soon-label">Coming Soon</div>
+    <img class="imgproduct" src="#" alt="Product Image">
+    <h3 id="csproductname4"></h3>
+    <p class="product-description"></p>
+    <p class="product-price"></p>
+  </div>
+</div>
+
+<!-- ******************************* -->
+</main>
+
+
+
+<!-- =================== FOOTER  =================== -->
+
+    <footer>
+      <div class="footer-content">
+        <p>COPY RIGHT BY <span>CUPICUTE
+            <img src="/images/Normal_page/logo_whiteFT.png" class="footer-logo" alt="CUPICUTE Logo">
+          </span> PROJECT - ITS241_WEB TECHNOLOGIES AND APPLICATIONS</p>
+      </div>
+    </footer>
+
+    <!-- ....................................................... -->
+
+  <!-- <script type="module">
+    
+  </script> -->
+  <script type="module">
+    import { callLoginWS } from "/callLoginWS.js";
+    import { callProductWS } from "/callProductWS.js";
+  
+    async function loadProducts() {
+  try {
+    // Fetch product data
+    const product = await callProductWS("/products", "getProducts");
+    if (product && product.data && product.data.length > 0) {
+      // Fetch 4 latest products (newest)
+      const latestProducts = product.data.slice(-4).reverse();
+      
+      // Display the newest products in the 'new' section
+      latestProducts.forEach((product, index) => {
+        const productNameElement = document.getElementById(`productname${index + 1}`);
+        const productCardElement = document.getElementById(`newproduct${index + 1}`);
+
+        if (productNameElement && productCardElement) {
+          const productPriceElement = productCardElement.querySelector('.product-price');
+          const productDescriptionElement = productCardElement.querySelector('.product-description');
+
+          productNameElement.textContent = product.ProductName || 'Product Name Unavailable';
+
+          if (productPriceElement) {
+            productPriceElement.textContent = product.Price ? `Price: $${product.Price}` : 'Price: Not available';
+          }
+
+          if (productDescriptionElement) {
+            productDescriptionElement.textContent = product.P_Description || 'No description available';
+          }
+
+          const productImageElement = productCardElement.querySelector('img');
+          if (productImageElement) {
+            productImageElement.src = product.ImageURL || 'default-image.jpg'; // Use a default if no image URL
+          }
+
+          productCardElement.setAttribute("onclick", `goToDetailPage('${product.ProductID}')`);
+        }
+      });
+
+      // Fetch a selection of products for the regular products section (without shuffling)
+      const regularProducts = product.data.slice(0, 4); // Display the first 4 products
+
+      // Display regular products in the 'regular' section
+      regularProducts.forEach((product, index) => {
+        const productNameElement = document.getElementById(`tproductname${index + 1}`);
+        const productCardElement = document.getElementById(`product${index + 1}`);
+
+        if (productNameElement && productCardElement) {
+          const productPriceElement = productCardElement.querySelector('.product-price');
+          const productDescriptionElement = productCardElement.querySelector('.product-description');
+
+          // Set product name
+          productNameElement.textContent = product.ProductName || 'Product Name Unavailable';
+
+          // Set product price
+          if (productPriceElement) {
+            productPriceElement.textContent = product.Price ? `Price: $${product.Price}` : 'Price: Not available';
+          }
+
+          // Set product description
+          if (productDescriptionElement) {
+            productDescriptionElement.textContent = product.P_Description || 'No description available';
+          }
+
+          // Set product image
+          const productImageElement = productCardElement.querySelector('img');
+          if (productImageElement) {
+            productImageElement.src = product.ImageURL || 'default-image.jpg'; // Use a default if no image URL
+          }
+        }
+        productCardElement.setAttribute("onclick", `goToDetailPage('${product.ProductID}')`);
+      });
+    }
+  } catch (error) {
+    console.error("Error loading products:", error);
+  }
+}
+async function loadComingSoonProducts() {
+      try {
+        const response = await fetch('http://makeup-api.herokuapp.com/api/v1/products.json');
+        const data = await response.json();
+        
+        // Get 4 random products from the API
+        const randomProducts = data
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+        
+        // Update the coming soon section
+        randomProducts.forEach((product, index) => {
+          const productNameElement = document.getElementById(`csproductname${index + 1}`);
+          const productCardElement = document.getElementById(`comingsoon${index + 1}`);
+          
+          if (productNameElement && productCardElement) {
+            const productPriceElement = productCardElement.querySelector('.product-price');
+            const productDescriptionElement = productCardElement.querySelector('.product-description');
+            const productImageElement = productCardElement.querySelector('img');
+            
+            // Update product information
+            productNameElement.textContent = product.name || 'Product Name Unavailable';
+            if (productPriceElement) {
+              productPriceElement.textContent = product.price ? `Price: $${product.price}` : 'Price: Coming Soon';
+            }
+            if (productDescriptionElement) {
+              productDescriptionElement.textContent = product.description || 'Description will be available soon';
+            }
+            if (productImageElement) {
+              productImageElement.src = product.image_link || '/images/default-product.jpg';
+              productImageElement.onerror = function() {
+                this.src = '/images/default-product.jpg';
+              };
+            }
+            
+            // Update product ID
+            productCardElement.setAttribute('data-productid', product.id);
+          }
+        });
+      } catch (error) {
+        console.error('Error loading coming soon products:', error);
+      }
+    }
+  
+    function goToDetailPage(productID) {
+      if (productID) {
+        console.log("Navigating to product with ID:", productID);
+        window.location.href = `/Detail?id=${productID}`;
+      } else {
+        console.error("Product ID is not defined.");
+      }
+    }
+  
+    // Load products when the script runs
+    loadProducts();
+    loadComingSoonProducts();
+    
+    window.goToDetailPage = function (productID) {
+      console.log(productID);
+      window.location.href = `/Detail?id=${productID}`;
+    };
+
+    // Add event listeners to product cards dynamically
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const productID = this.dataset.productid;
+        goToDetailPage(productID);
+      });
+    });
+
+    
+ // ------------- profile  -------------
+ document.addEventListener('DOMContentLoaded', () => {
+            callLoginWS("getUserProfile");
+        });
+
+  </script>
+  
+<script src="header.js"></script>
+
+
+
+
+  
+
+</body>
+
+</html>
